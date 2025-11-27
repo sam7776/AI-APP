@@ -1,0 +1,11 @@
+google-generativeai
+soundcard
+numpy<2.0
+scipy
+PyQt5
+mss
+pystray
+Pillow
+faster-whisper
+keyboard
+python-dotenv
