@@ -73,3 +73,11 @@ A real-time AI assistant that listens to your meetings/interviews, transcribes t
 ## License
 
 [MIT](LICENSE)
+
+---
+
+<div align="center">
+
+### 👨‍💻 Developed by **NISHANT MESHRAM** 🚀
+
+</div>
