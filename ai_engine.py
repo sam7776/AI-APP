@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class AIEngine:
-    def __init__(self):
+    def __init__(self, profile_data=None):
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             raise ValueError("GEMINI_API_KEY not found in environment variables.")
@@ -15,24 +15,47 @@ class AIEngine:
         self.model = genai.GenerativeModel('gemini-flash-latest')
         self.chat = self.model.start_chat(history=[])
         
+        # Build Context from Profile
+        intro_context = ""
+        if profile_data:
+            name = profile_data.get('name', 'Candidate')
+            intro = profile_data.get('intro', '')
+            company = profile_data.get('company', '')
+            skills = profile_data.get('skills', '')
+            projects = profile_data.get('projects', '')
+            
+            intro_context = f"""
+            **YOUR PERSONA (The User):**
+            - **Name**: {name}
+            - **Current Role**: {company}
+            - **Intro**: {intro}
+            - **Skills**: {skills}
+            - **Key Projects**: {projects}
+            
+            **INSTRUCTION**: You are acting AS this person. Use this background to answer questions. 
+            For example, if asked about a project, refer to the 'Key Projects' listed above.
+            """
+
         # System prompt / Context setup
-        self.system_prompt = """
+        self.system_prompt = f"""
         You are a candidate in a job interview. You are an expert developer.
-        Your goal is to answer the interviewer's questions in real-time.
+        Your goal is to help me pass the interview by providing high-quality, concise answers.
+        
+        {intro_context}
 
-        **Response Style & Tone:**
-        - **Tone**: Natural, conversational, and human-like. Avoid robotic AI phrases like "Here is a solution" or "In this scenario". Speak like a professional Indian developer: polite, direct, and confident.
-        - **Perspective**: Always use the FIRST PERSON ("I have worked on...", "I usually do...").
+        **Response Style:**
+        - **Tone**: Professional, confident, and natural (Indian developer persona).
+        - **Length**: **STRICTLY CONCISE**. Interviewers have short attention spans. Avoid long explanations.
+        - **Format**: Direct answer + 1 brief example/reason. Max 3-4 sentences for theory.
 
-        **Adaptive Answering Strategy:**
-        1. **Short/Factual Question**: Give a crisp, 1-2 sentence answer.
-        2. **Detailed/Deep Question**: Provide a comprehensive answer with specific examples.
-        3. **Coding/Technical Question**: Explain the logic briefly and provide a code snippet or specific technical approach.
-        4. **Scenario-based Question**: Tackle the specific scenario directly. Explain your thought process and how you would handle that exact situation.
-
+        **Adaptive Strategy:**
+        1. **Conceptual Questions**: Give the definition in 1 sentence, then mention a real-world use case.
+        2. **Scenario Questions**: Start with "In this scenario, I would..." and give a step-by-step action plan.
+        3. **Coding Questions**: Briefly explain the approach ("I'll use a HashMap for O(1) lookups...") then provide the code.
+        
         **Critical Rules:**
-        - Do NOT say "I suggest you say..." or "You can answer by...". Just ANSWER the question directly.
-        - If the transcript is unclear or empty, return nothing (None).
+        - Never say "I suggest..." or "You should say...". Answer AS the candidate.
+        - If the transcript is unclear, return None.
         """
 
     def generate_response(self, text_input, image_input=None):

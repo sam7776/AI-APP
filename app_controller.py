@@ -1,4 +1,5 @@
 import sys
+import os
 import keyboard
 import threading
 import time
@@ -32,10 +33,16 @@ class AppController(QObject):
     update_status_signal = pyqtSignal(str)
     update_suggestion_signal = pyqtSignal(str)
 
-    def __init__(self, stt_engine):
+    def __init__(self, stt_engine, profile_data=None, profile_filename=None, app_instance=None):
         super().__init__()
         print("Initializing AppController...")
-        self.app = QApplication(sys.argv)
+        
+        # Use existing app instance if provided, else create new
+        if app_instance:
+            self.app = app_instance
+        else:
+            self.app = QApplication(sys.argv)
+            
         print("PyQt App created.")
         self.window = OverlayWindow()
         print("Overlay Window created.")
@@ -51,7 +58,10 @@ class AppController(QObject):
         self.stt_engine = stt_engine
         print("STT Engine assigned.")
         
-        self.ai_engine = AIEngine()
+        self.profile_data = profile_data
+        self.profile_filename = profile_filename
+        
+        self.ai_engine = AIEngine(profile_data) # Pass profile to AI Engine
         print("AI Engine initialized.")
         self.screen_capture = ScreenCapture()
         print("Screen Capture initialized.")
@@ -60,6 +70,32 @@ class AppController(QObject):
         self.transcript = ""
         self.last_ai_time = 0
         self.clear_transcript_next = False
+        
+        # Ensure transcript directory exists
+        self.transcript_dir = os.path.join(os.getcwd(), "transcripts")
+        if not os.path.exists(self.transcript_dir):
+            os.makedirs(self.transcript_dir)
+
+    def save_transcript_pair(self, question, answer):
+        if not self.profile_filename:
+            print("No profile filename, skipping transcript save.")
+            return
+            
+        # Filename: [ProfileName]_[Date]_transcript.txt
+        base_name = self.profile_filename.replace(".json", "")
+        transcript_file = f"{base_name}_transcript.txt"
+        filepath = os.path.join(self.transcript_dir, transcript_file)
+        
+        timestamp = time.strftime("%H:%M:%S")
+        
+        try:
+            print(f"Saving transcript to: {filepath}")
+            with open(filepath, "a", encoding="utf-8") as f:
+                f.write(f"[{timestamp}] Q: {question}\n")
+                f.write(f"[{timestamp}] A: {answer}\n")
+                f.write("-" * 40 + "\n")
+        except Exception as e:
+            print(f"Failed to save transcript: {e}")
 
     def start(self):
         self.window.show()
@@ -126,7 +162,13 @@ class AppController(QObject):
                                 response = self.ai_engine.generate_response(self.transcript[-1000:])
                                 if response:
                                     self.update_suggestion_signal.emit(response)
-                                    self.clear_transcript_next = True # Reset transcript on next input
+                                    self.save_transcript_pair(self.transcript[-1000:], response) # Save to file
+                                    
+                                    # Clear transcript immediately to focus on next question
+                                    self.transcript = ""
+                                    self.update_text_signal.emit("") 
+                                    self.clear_transcript_next = False 
+                                    
                                 self.update_status_signal.emit("Active")
                             except:
                                 pass

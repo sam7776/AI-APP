@@ -1,0 +1,20 @@
+[01:09:50] Q:  Oh, hey, hi. Now tell me about yourselves.
+[01:09:50] A: Hello, my name is Nishant Meshram. I am a Solution Engineer at Deqode in Indore, bringing 4 years of focused experience as a DevOps Engineer. My expertise lies primarily in infrastructure automation using Terraform, orchestration with Kubernetes and Helm, and managing robust CI/CD pipelines via Jenkins and ArgoCD. I have successfully delivered high-availability solutions for large-scale projects, notably in the E-commerce and Telecom domains.
+----------------------------------------
+[01:10:47] Q:  Tell me about yourself in brief with your tools and technologies.
+[01:10:47] A: Hello, I am Nishant Meshram, a Solution Engineer at Deqode with four years of experience primarily focused on DevOps methodologies and infrastructure automation.
+
+My core skill set includes AWS, Linux, and IaC using Terraform, alongside container orchestration with Kubernetes and Docker. For CI/CD, I extensively use Jenkins, Helm, and ArgoCD, ensuring robust pipelines for projects like our E-commerce platform.
+
+I handle end-to-end observability, implementing Prometheus and Grafana for monitoring services across domains like Telecom and BaxterPlanning.
+----------------------------------------
+[01:11:43] Q:  Ok Sunishman, tell me, why should we hire you?
+[01:11:43] A: Thank you for the opportunity. You should hire me because I bring four years of focused, hands-on experience as a Solution Engineer, specializing in building and maintaining resilient, scalable infrastructure.
+
+I have proven expertise across the entire DevOps lifecycle, from provisioning large-scale resources using Terraform and AWS to managing complex deployments on Kubernetes using ArgoCD and Helm. For example, in my E-commerce project, I successfully optimized our CI/CD pipelines using Jenkins, resulting in a 40% reduction in deployment time. I can immediately contribute to streamlining your operations and ensuring high availability.
+----------------------------------------
+[01:14:02] Q:  what kind of your contribution is in your projects.
+[01:14:02] A: Across all my key projects—E-commerce, Telecom, and BaxterPlanning—my contribution centered on engineering robust, automated delivery systems.
+
+For the E-commerce platform, I utilized Terraform to build and manage the entire AWS infrastructure stack, ensuring high availability and compliance. A major contribution was defining and implementing the end-to-end CI/CD pipeline using Jenkins and ArgoCD, automating deployments directly onto Kubernetes clusters, which reduced deployment time from 45 minutes to under 5 minutes.
+----------------------------------------
